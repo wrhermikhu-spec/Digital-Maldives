@@ -32,6 +32,7 @@
       <nav class="tabs">
         <button data-tab="orders" class="on">Orders <span class="badge" id="pendingBadge"></span></button>
         <button data-tab="customers">Customers</button>
+        <button data-tab="visitors">Visitors</button>
         <button data-tab="stock">Stock</button>
         <button data-tab="cards">Cards</button>
         <button data-tab="settings">Settings</button>
@@ -40,6 +41,7 @@
       <div data-pane="orders">
         <div class="filters">
           <button data-f="pending" class="on">Pending</button>
+          <button data-f="verify">ID check</button>
           <button data-f="approved">Approved</button>
           <button data-f="rejected">Rejected</button>
           <button data-f="all">All</button>
@@ -52,6 +54,17 @@
         <p class="muted small">Grouped by browser. ⚠ flags: an IP shared with another customer, or a past rejected slip.</p>
         <input id="custSearch" class="search" placeholder="Search name, contact, IP, model…" />
         <div id="custList"></div>
+      </div>
+
+      <div data-pane="visitors" hidden>
+        <div class="filters">
+          <button data-vf="all" class="on">All</button>
+          <button data-vf="noorder">Didn't order</button>
+          <button data-vf="ordered">Ordered</button>
+          <input id="visSearch" placeholder="Search IP, ISP, model, city…" />
+        </div>
+        <p class="muted small" id="visStats"></p>
+        <div id="visList"></div>
       </div>
 
       <div data-pane="stock" hidden><div id="stockList"></div></div>

@@ -151,3 +151,15 @@ dialog::backdrop { background: rgba(15,23,42,.5); }
   .grid .price { font-size: 15px; }
   .tile-row { flex-wrap: wrap; gap: 4px; }
 }
+
+.sep { border: 0; border-top: 1px solid var(--line); margin: 6px 0; }
+.legal a, .foot a, .notice a { color: var(--accent); }
+.verify { display: grid; gap: 12px; margin-top: 14px; text-align: left; }
+.small-drop { min-height: 110px; margin: 0; }
+.small-drop img { max-height: 200px; }
+.tag.verify_required, .tag.verify_submitted { background: #ede9fe; color: #6d28d9; }
+.order.verify_required, .order.verify_submitted { border-left-color: #7c3aed; }
+.kyc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.kyc-grid img { width: 100%; border-radius: 10px; border: 1px solid var(--line); }
+.kyc-grid figcaption { font-size: 12px; color: var(--muted); text-align: center; margin-top: 4px; }
+.kyc-grid figure { margin: 0; }
