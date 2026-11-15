@@ -83,6 +83,12 @@
           <label>Account name<input name="account_name" /></label>
           <label>Account number<input name="account_number" /></label>
           <label>Payment instructions<textarea name="instructions" rows="3" placeholder="Use your name as the transfer remark."></textarea></label>
+          <h2 style="margin-top:22px">⚡ Instant delivery</h2>
+          <p class="small muted" id="aiKeyNote"></p>
+          <label class="check"><input type="checkbox" name="instant_enabled" /> Enable instant delivery</label>
+          <label>Max card price for instant<input name="instant_max_price" type="number" step="0.01" min="0" /></label>
+          <label>Instant orders per buyer per day<input name="instant_daily_limit" type="number" min="0" /></label>
+          <p class="small muted">Instant orders auto-release a PIN when the slip and ID pass every check. A well-edited fake slip can still pass, so keep the limits low and check your bank regularly.</p>
           <button class="btn primary">Save settings</button>
         </form>
       </div>

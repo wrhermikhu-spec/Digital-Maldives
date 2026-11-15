@@ -78,8 +78,8 @@ const mapUrl = (lat, lng) => `https://www.google.com/maps?q=${lat},${lng}`;
 const ipFamily = ip => (String(ip).includes(":") ? 6 : 4);
 // Only compare when both are IPv4 or both IPv6 (a phone can use either for different requests)
 const ipMismatch = o => o.ip && o.browser_ip && ipFamily(o.ip) === ipFamily(o.browser_ip) && o.ip !== o.browser_ip;
-const gpsText = o => o.gps_status === "granted" && o.gps_lat != null
-  ? `<a href="${mapUrl(o.gps_lat, o.gps_lng)}" target="_blank" rel="noopener">${Number(o.gps_lat).toFixed(5)}, ${Number(o.gps_lng).toFixed(5)}</a> <span class="muted">±${Math.round(o.gps_accuracy || 0)} m</span>`
+const gpsText = o => (o.gps_status === "granted" || o.gps_status === "shared_at_id") && o.gps_lat != null
+  ? `<a href="${mapUrl(o.gps_lat, o.gps_lng)}" target="_blank" rel="noopener">${Number(o.gps_lat).toFixed(5)}, ${Number(o.gps_lng).toFixed(5)}</a> <span class="muted">±${Math.round(o.gps_accuracy || 0)} m${o.gps_status === "shared_at_id" ? " · shared at ID check" : ""}</span>`
   : `<span class="muted">${{ not_granted: "Not shared", unavailable: "Not available", timeout: "Timed out" }[o.gps_status] || "Not shared"}</span>`;
 
 const devLine = o => `📱 <b>${esc(o.device_model || "?")}</b> · ${esc(o.os || "")} · ${esc(o.browser || "")}<br>
@@ -130,15 +130,16 @@ function renderOrders() {
       <div class="order-top">
         <div><b>${esc(o.card_name)}</b> · ${money(o.price, o.currency)}<br>
           <span class="small muted">${esc(o.id.slice(0, 8).toUpperCase())} · ${when(o.created_at)}</span></div>
-        <span class="tag ${o.status}">${STATUS[o.status] || o.status}</span>
+        <span class="row gap">${o.instant ? `<span class="tag auto">${o.auto_approved ? "⚡ Auto-approved" : "⚡ Instant"}</span>` : ""}<span class="tag ${o.status}">${STATUS[o.status] || o.status}</span></span>
       </div>
       <div class="small"><b>${esc(o.buyer_name)}</b> · ${esc(o.contact)}</div>
       <div class="small dev">${devLine(o)}</div>
       ${flags.length ? `<div class="flag">⚠ ${flags.map(esc).join(" · ")}</div>` : ""}
+      ${o.auto_check ? autoCheckBox(o) : ""}
       ${o.status === "approved" ? `<div class="small">PIN sent: <code>${esc(o.pin)}</code></div>` : ""}
       ${o.status === "rejected" && o.note ? `<div class="small muted">Reason: ${esc(o.note)}</div>` : ""}
       ${o.status === "verify_required" ? `<div class="small muted">Waiting for buyer to upload ID · asked ${when(o.verify_requested_at)}</div>` : ""}
-      ${o.status === "verify_submitted" ? `<div class="flag" style="background:#ede9fe;color:#5b21b6">🪪 ID submitted ${when(o.verify_submitted_at)}: review it</div>` : ""}
+      ${o.status === "verify_submitted" ? `<div class="flag" style="background:#ede9fe;color:#5b21b6">🪪 ID submitted ${when(o.verify_submitted_at)}: review it${o.verify_location === "declined" ? " · ⚠ declined to share location" : ""}</div>` : ""}
       <div class="row gap wrapr">
         <button class="btn" data-slip="${o.id}">View slip</button>
         <button class="btn" data-dev="${o.id}">Device details</button>
@@ -165,6 +166,15 @@ function renderOrders() {
   $$("[data-delkyc]").forEach(b => (b.onclick = () => deleteKyc(b.dataset.delkyc)));
 }
 
+const CHECK_LABEL = { slip_readable: "Slip is a successful transfer", id_readable: "ID readable", id_not_expired: "ID not expired", name_match: "Slip name matches ID",
+  amount_match: "Amount matches", paid_to_us: "Paid to our account", within_30_min: "Transferred within 30 min", reference_new: "Reference not used before", no_editing_signs: "No signs of editing" };
+function autoCheckBox(o) {
+  const a = o.auto_check;
+  const head = a.error ? `⚠ ${esc(a.error)}` : a.passed ? "✓ All automatic checks passed" : "✗ Automatic checks failed: review manually";
+  return `<details class="dev small"${a.passed ? "" : " open"}><summary><b>${head}</b></summary>
+    <ul class="checks">${(a.checks || []).map(c => `<li>${c.ok ? "✅" : "❌"} ${esc(CHECK_LABEL[c.key] || c.key)} <span class="muted">· ${esc(c.detail || "")}</span></li>`).join("")}</ul></details>`;
+}
+
 const STATUS = { pending: "Pending", approved: "Approved", rejected: "Rejected", verify_required: "ID requested", verify_submitted: "ID submitted" };
 
 function askIdDialog(id) {
@@ -186,10 +196,10 @@ async function viewKyc(id) {
   try {
     const [{ idUrl, selfieUrl }, slip] = await Promise.all([call("kyc", { id }), call("slip", { id }).catch(() => ({}))]);
     modal(`<h3>ID check · ${esc(o.buyer_name)}</h3>
-      <p class="small">Name entered: <b>${esc(o.buyer_name)}</b> · ${esc(o.contact)}</p>
+      <p class="small">Name entered: <b>${esc(o.buyer_name)}</b> · ${esc(o.contact)}${o.id_name ? `<br>Name on ID (read automatically): <b>${esc(o.id_name)}</b>` : ""}${o.slip_sender ? `<br>Slip sender (read automatically): <b>${esc(o.slip_sender)}</b>` : ""}</p>
       <div class="kyc-grid">
         <figure><a href="${esc(idUrl)}" target="_blank" rel="noopener"><img src="${esc(idUrl)}" alt="ID card" /></a><figcaption>ID card</figcaption></figure>
-        <figure><a href="${esc(selfieUrl)}" target="_blank" rel="noopener"><img src="${esc(selfieUrl)}" alt="Selfie with ID" /></a><figcaption>Selfie with ID</figcaption></figure>
+        ${selfieUrl ? `<figure><a href="${esc(selfieUrl)}" target="_blank" rel="noopener"><img src="${esc(selfieUrl)}" alt="Selfie with ID" /></a><figcaption>Selfie with ID</figcaption></figure>` : ""}
         ${slip.url ? `<figure><a href="${esc(slip.url)}" target="_blank" rel="noopener"><img src="${esc(slip.url)}" alt="Slip" /></a><figcaption>Payment slip</figcaption></figure>` : ""}
       </div>
       <p class="small muted">Check: the face matches the ID photo · the name on the ID matches the slip's sender · the ID isn't edited or a screenshot.</p>
@@ -262,7 +272,7 @@ function renderCustomers() {
     if (o.status === "rejected") c.rejected++;
     if (o.ip) c.ips.set(o.ip, "server · " + place(o));
     if (o.browser_ip) c.ips.set(o.browser_ip, (c.ips.has(o.browser_ip) ? c.ips.get(o.browser_ip) + " / " : "") + "browser" + (o.isp ? ` · ${o.isp}` : ""));
-    if (o.gps_status === "granted" && o.gps_lat != null) c.gps.push(o);
+    if ((o.gps_status === "granted" || o.gps_status === "shared_at_id") && o.gps_lat != null) c.gps.push(o);
     if (o.device_model) c.devices.set(`${o.device_model} · ${o.os} · ${o.browser}`, o.screen || "");
     const t = new Date(o.created_at).getTime();
     c.first = Math.min(c.first, t); c.last = Math.max(c.last, t);
@@ -379,16 +389,18 @@ function cardDialog(c) {
 }
 
 // ---------- settings ----------
-const SETTINGS = ["name", "currency", "bank_name", "account_name", "account_number", "instructions"];
+const SETTINGS = ["name", "currency", "bank_name", "account_name", "account_number", "instructions", "instant_max_price", "instant_daily_limit"];
 function fillSettings() {
   const f = $("#settingsForm");
+  $("#aiKeyNote").innerHTML = shop.ai_key_set ? "✓ AI key is set in Vercel." : "⚠ Add <code>ANTHROPIC_API_KEY</code> in Vercel → Environment Variables to use instant delivery.";
   if (f.contains(document.activeElement)) return;
-  for (const k of SETTINGS) f[k].value = shop[k] || "";
+  for (const k of SETTINGS) f[k].value = shop[k] ?? "";
+  f.instant_enabled.checked = !!shop.instant_enabled;
 }
 $("#settingsForm").onsubmit = async e => {
   e.preventDefault();
   const f = new FormData(e.target);
-  try { await call("saveSettings", { settings: Object.fromEntries(SETTINGS.map(k => [k, f.get(k)])) }); toast("Settings saved", "ok"); document.activeElement.blur(); refresh(); }
+  try { await call("saveSettings", { settings: { ...Object.fromEntries(SETTINGS.map(k => [k, f.get(k)])), instant_enabled: !!f.get("instant_enabled") } }); toast("Settings saved", "ok"); document.activeElement.blur(); refresh(); }
   catch (err) { toast(err.message, "err"); }
 };
 

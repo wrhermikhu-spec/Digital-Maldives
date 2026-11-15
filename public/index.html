@@ -44,12 +44,30 @@
           <label>Full name<input name="buyerName" required maxlength="80" autocomplete="name" /></label>
           <label>Phone or email<input name="contact" required maxlength="120" autocomplete="tel" placeholder="So we can reach you if there's a problem" /></label>
 
+          <div id="modeBox" hidden>
+            <h2>Delivery</h2>
+            <div class="modes">
+              <label class="mode"><input type="radio" name="mode" value="standard" checked /><span><b>Standard</b><small>We check your slip manually, usually within minutes during business hours.</small></span></label>
+              <label class="mode"><input type="radio" name="mode" value="instant" /><span><b>⚡ Instant</b><small>Upload your slip + ID card. If everything matches, your PIN appears in about a minute, any time.</small></span></label>
+            </div>
+            <p class="muted small" id="instantRules" hidden>For instant delivery: transfer from <b>your own</b> account (the name must match your ID), transfer within <b>30 minutes</b> of opening this page, and pay the exact amount.</p>
+          </div>
+
           <h2>3. Upload your transfer slip</h2>
           <label class="drop" id="drop">
             <input type="file" id="slipInput" accept="image/*" hidden />
             <span id="dropText"><b>Tap to choose a screenshot</b><br /><small>JPG or PNG of the bank app receipt</small></span>
             <img id="slipPreview" alt="" hidden />
           </label>
+          <div id="idBox" hidden>
+            <h2>4. Upload your ID card</h2>
+            <label class="drop" id="idDrop">
+              <input type="file" id="idInput" accept="image/*" hidden />
+              <span id="idText"><b>Tap to add a photo of your ID card</b><br /><small>Front side, name clearly readable</small></span>
+              <img id="idPreview" alt="" hidden />
+            </label>
+          </div>
+
           <p class="notice">By submitting, you agree to our <a href="/terms">Terms of Use</a> and <a href="/privacy">Privacy Policy</a>.</p>
           <button class="btn primary big" id="coSubmit" type="submit">Submit slip</button>
         </form>

@@ -8,13 +8,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
   <style>
-    .legal { max-width: 720px; margin: 0 auto; padding: 32px 0 48px; }
+    .legal { max-width: 760px; margin: 0 auto; padding: 32px 0 48px; }
     .legal h1 { font-size: clamp(28px, 6vw, 38px); }
-    .legal h2 { margin-top: 32px; }
-    .legal p, .legal li { color: #374151; }
-    .legal ul { padding-left: 20px; }
-    .legal li { margin: 6px 0; }
+    .legal h2 { margin-top: 34px; font-size: 19px; }
+    .legal h3 { margin-top: 20px; font-size: 15px; }
+    .legal p, .legal li { color: #374151; font-size: 14.5px; line-height: 1.7; }
+    .legal ul, .legal ol { padding-left: 22px; }
+    .legal li { margin: 5px 0; }
     .legal .updated { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+    .legal .toc { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; }
+    .legal .toc li { margin: 2px 0; font-size: 14px; }
+    .legal table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0; }
+    .legal th, .legal td { border: 1px solid var(--line); padding: 8px; text-align: left; vertical-align: top; }
+    .legal th { background: #fafaf8; }
   </style>
 </head>
 <body>
@@ -27,63 +33,170 @@
 
   <main class="wrap legal">
     <h1>Privacy Policy</h1>
-    <p class="updated">Last updated: 15 November 2026</p>
+    <p class="updated">Effective date: 15 November 2026 · Last updated: 15 November 2026</p>
 
-    <p>This policy explains what information Digital Maldives ("we", "us") collects when you use this website to buy gift cards, why we collect it, and how we protect it.</p>
+    <p>This Privacy Policy ("Policy") describes how Digital Maldives ("Digital Maldives", "we", "us" or "our") collects, uses, stores, discloses, retains and otherwise processes personal information in connection with the website located at digitalmv.vercel.app and any related pages, features and services (together, the "Service"). This Policy should be read together with our <a href="/terms">Terms of Use</a>. By accessing or using the Service, you acknowledge that you have read and understood this Policy. If you do not agree with this Policy, you must not access or use the Service.</p>
 
-    <h2>1. Information you give us</h2>
+    <nav class="toc">
+      <b>Contents</b>
+      <ol>
+        <li>Definitions</li>
+        <li>Scope of this Policy</li>
+        <li>Information you provide to us</li>
+        <li>Information collected automatically</li>
+        <li>Location information</li>
+        <li>Identity verification information</li>
+        <li>Information stored on your device</li>
+        <li>How we use your information</li>
+        <li>Legal basis for processing</li>
+        <li>Fraud prevention and automated signals</li>
+        <li>Disclosure of information</li>
+        <li>Service providers and international transfers</li>
+        <li>Data retention</li>
+        <li>Data security</li>
+        <li>Your order link</li>
+        <li>Your rights and choices</li>
+        <li>Children</li>
+        <li>Third-party websites and brands</li>
+        <li>Changes to this Policy</li>
+        <li>Contact us</li>
+      </ol>
+    </nav>
+
+    <h2>1. Definitions</h2>
+    <p>In this Policy, unless the context requires otherwise:</p>
     <ul>
-      <li><b>Name</b> and <b>phone number or email</b>, so we can identify your order and contact you if there is a problem.</li>
-      <li><b>Payment slip</b>: the screenshot of your bank transfer, so we can verify your payment.</li>
+      <li><b>"Personal information"</b> means any information that identifies, relates to, describes, or is reasonably capable of being associated with an identified or identifiable individual.</li>
+      <li><b>"Processing"</b> means any operation performed on personal information, including collection, recording, organisation, storage, adaptation, retrieval, consultation, use, disclosure, combination, restriction, erasure or destruction.</li>
+      <li><b>"Order"</b> means a request submitted through the Service to purchase one or more digital gift card codes.</li>
+      <li><b>"PIN"</b> or <b>"Code"</b> means a digital gift card code, voucher, redemption code or similar credential delivered through the Service.</li>
+      <li><b>"Payment Slip"</b> means any image, screenshot, receipt or other record of a bank transfer that you upload in connection with an Order.</li>
+      <li><b>"Visitor"</b> means any person who accesses any page of the Service, whether or not that person places an Order.</li>
+      <li><b>"Buyer"</b> means any person who submits an Order.</li>
+      <li><b>"Device"</b> means any computer, phone, tablet or other equipment used to access the Service.</li>
     </ul>
 
-    <h2>2. Information collected automatically</h2>
-    <p>When you place an order, we automatically record:</p>
+    <h2>2. Scope of this Policy</h2>
+    <p>This Policy applies to personal information processed by us through the Service, including when you browse the Service, place an Order, upload a Payment Slip, complete identity verification, view an order page, or contact us. This Policy does not apply to information processed by third parties, including gift card issuers, banks, payment providers, browser vendors, operating system providers, or any website or service that is linked to from the Service, each of which is governed by its own privacy terms.</p>
+
+    <h2>3. Information you provide to us</h2>
+    <p>We collect information that you voluntarily provide to us, including:</p>
     <ul>
-      <li><b>IP address</b>, as seen by our server and as seen by your browser, together with your <b>internet provider</b> and approximate <b>location</b> (city, region and country) based on that IP address.</li>
-      <li><b>Device information</b>: phone or device model, operating system, browser, screen size, language and timezone.</li>
-      <li>A random <b>browser identifier</b> stored on your device, used to link orders placed from the same browser.</li>
-      <li>The date and time of your order.</li>
+      <li><b>Contact and identification details:</b> your full name and your phone number and/or email address as entered at checkout.</li>
+      <li><b>Order details:</b> the gift card selected, the price, the currency and the date and time of the Order.</li>
+      <li><b>Payment Slip:</b> the image you upload as proof of payment, which may contain your name, bank name, account number (or part of it), transaction reference, amount, date and time, and any other information visible in the image.</li>
+      <li><b>Identity verification materials</b> (only when requested, see Section 6): a photograph of an identity document and a photograph of you holding that document.</li>
+      <li><b>Communications:</b> any information you provide when you contact us, including messages, screenshots and attachments.</li>
+    </ul>
+    <p>You are responsible for ensuring that any information you provide is accurate, complete and belongs to you. Do not upload images that contain information about other individuals unless you are authorised to do so.</p>
+
+    <h2>4. Information collected automatically</h2>
+    <p>When you visit the Service, whether or not you place an Order, we and our service providers automatically collect certain technical information about your Device and connection. This includes:</p>
+    <table>
+      <tr><th>Category</th><th>Examples</th><th>Collected from</th></tr>
+      <tr><td>Network information (server side)</td><td>IP address; approximate city, region and country derived from IP address; approximate coordinates derived from IP address</td><td>Every page request, via our hosting provider</td></tr>
+      <tr><td>Network information (browser side)</td><td>IP address as observed by an IP lookup service contacted by your browser; internet service provider or network operator; approximate city and country</td><td>Your browser, when you load the store</td></tr>
+      <tr><td>Device and browser information</td><td>Device model (where your browser makes it available), operating system and version, browser type and version, whether the page was opened inside another app (for example a social media app), screen resolution and pixel density, preferred language and timezone</td><td>Your browser and the request headers it sends</td></tr>
+      <tr><td>Usage information</td><td>Pages visited, the referring page or website, the date and time of each visit and the number of visits</td><td>Your browser and our hosting provider</td></tr>
+      <tr><td>Identifiers</td><td>A randomly generated browser identifier stored on your Device (see Section 7)</td><td>Your browser</td></tr>
+    </table>
+    <p>IP-based location is an estimate produced by third-party databases and may not reflect your actual location. We do not use IP-based location to make any decision about you on its own.</p>
+
+    <h2>5. Location information</h2>
+    <h3>5.1 Approximate location</h3>
+    <p>As described in Section 4, we derive an approximate location from your IP address for every Visitor and Buyer.</p>
+    <h3>5.2 Precise location (GPS)</h3>
+    <p>Precise location (such as GPS coordinates) is only available to us where your browser permits it. We collect precise location in the following circumstances only:</p>
+    <ol>
+      <li><b>Where you have previously granted this website location permission</b> in your browser or device settings. In that case, when you open checkout, we read your current coordinates and their accuracy without displaying any additional prompt, and store them with your Order. We do not request location permission at checkout.</li>
+      <li><b>Where you choose to share your location during identity verification</b>, by pressing the "Share my location" button. In that case, your browser will ask for your permission and we only receive your location if you allow it. Sharing location at this step is optional. We may take into account whether location was shared when assessing a verification request.</li>
+    </ol>
+    <p>You can withdraw location permission for this website at any time through your browser or device settings. Withdrawing permission does not affect information collected before withdrawal.</p>
+
+    <h2>6. Identity verification information</h2>
+    <p>Where an Order presents indicators of potential fraud, error or misuse, we may place the Order on hold and request that you verify your identity. Verification consists of uploading (a) a photograph of the front of a government-issued identity document, and (b) a photograph of yourself holding that document, and may optionally include sharing your location as described in Section 5.2.</p>
+    <p>Verification materials are reviewed manually by our authorised staff, who compare the face, name and other details with the Order and Payment Slip. We do not use automated facial recognition or biometric matching. Verification materials are used solely to verify the relevant Order and to prevent and investigate fraud. They are stored in a private storage area that is not publicly accessible, and are deleted after the verification decision is made, and in any event no later than thirty (30) days after the decision, unless we are required to retain them by law or in connection with an ongoing investigation or dispute.</p>
+    <p>You are not obliged to complete verification. If you decline or do not complete verification, we may cancel the Order and refund any payment received in accordance with our Terms of Use.</p>
+    <h3>6.1 Instant delivery</h3>
+    <p>If you choose Instant delivery at checkout, you upload a photograph of your identity document together with your Payment Slip. These images are sent to our artificial intelligence service provider (see Section 12), which extracts specific details: the sender name, recipient name and account, amount, currency, date and time and transaction reference from the Payment Slip, and the name, document number and expiry date from the identity document. Our system then automatically compares these details with your Order, including whether the sender name matches the name on your identity document, whether the transfer was made within 30 minutes of the time you opened checkout, whether the amount and recipient account are correct, and whether the transaction reference has been used before. We record the time you opened checkout for this purpose. The extracted details and the result of each comparison are stored with your Order. Identity documents uploaded for Instant delivery are retained and deleted in the same way as other verification materials described above.</p>
+
+    <h2>7. Information stored on your device</h2>
+    <p>The Service uses your browser's local storage to keep (a) a randomly generated browser identifier, used to recognise repeat visits and to link Orders placed from the same browser, and (b) a list of your recent Orders, so that you can find them under "My orders". Our admin area also uses session storage to keep staff signed in. We do not use advertising cookies, third-party tracking pixels or cross-site tracking technologies. You can clear local storage at any time through your browser settings; doing so will remove the identifier and your saved order list from that browser.</p>
+
+    <h2>8. How we use your information</h2>
+    <p>We process personal information for the following purposes:</p>
+    <ol>
+      <li><b>Providing the Service:</b> displaying the store, processing Orders, verifying payments and delivering PINs.</li>
+      <li><b>Payment verification:</b> matching Payment Slips against funds received.</li>
+      <li><b>Fraud prevention and security:</b> detecting, investigating and preventing fraudulent, unauthorised, abusive or illegal activity, including the use of fake, edited or reused Payment Slips, stolen bank accounts, multiple identities or automated access.</li>
+      <li><b>Identity verification:</b> where requested under Section 6.</li>
+      <li><b>Customer support:</b> responding to enquiries, complaints, refund requests and disputes.</li>
+      <li><b>Operations and improvement:</b> understanding how the Service is used, measuring traffic and diagnosing technical problems.</li>
+      <li><b>Legal and compliance:</b> keeping business and accounting records, complying with legal obligations, responding to lawful requests, and establishing, exercising or defending legal claims.</li>
+    </ol>
+    <p>We do not sell personal information. We do not use personal information for advertising or marketing, and we do not send marketing messages.</p>
+
+    <h2>9. Legal basis for processing</h2>
+    <p>To the extent applicable law requires a legal basis for processing, we rely on: (a) the performance of a contract with you, or steps taken at your request before entering into a contract, for processing Orders; (b) our legitimate interests in operating a secure Service, preventing fraud and protecting our business, Buyers and third parties, for the collection of technical, network and device information; (c) your consent, for precise location collected under Section 5.2 and, where required, for identity verification materials; and (d) compliance with legal obligations, for record keeping and responses to lawful requests.</p>
+
+    <h2>10. Fraud prevention and automated signals</h2>
+    <p>Our admin tools display indicators that may help our staff identify potentially fraudulent activity, for example when the same IP address is used by multiple Buyers, when the IP address observed by our server differs from the IP address observed by your browser, or when a Buyer previously had an Order rejected. These indicators are reviewed by a person.</p>
+    <p>Where you choose Instant delivery, a PIN may be released automatically if every automated check described in Section 6.1 is passed. The automated system can only approve an Order; it never rejects an Order. If any check is not passed, or the automated check cannot be completed, your Order is referred to our staff for manual review in the ordinary way. You can always choose Standard delivery, which does not involve automated document reading.</p>
+
+    <h2>11. Disclosure of information</h2>
+    <p>We disclose personal information only as follows:</p>
+    <ul>
+      <li><b>Authorised staff</b> who need access to perform their duties.</li>
+      <li><b>Service providers</b> acting on our behalf (see Section 12).</li>
+      <li><b>Banks and payment institutions</b>, where necessary to verify a payment, process a refund or investigate suspected fraud.</li>
+      <li><b>Gift card issuers</b>, where necessary to investigate a disputed or faulty Code.</li>
+      <li><b>Law enforcement, regulators, courts and other authorities</b>, where required by law, or where we believe in good faith that disclosure is necessary to prevent fraud, protect rights, property or safety, or investigate a breach of our Terms of Use.</li>
+      <li><b>Successors</b>, in connection with any merger, sale, restructuring or transfer of all or part of our business, subject to this Policy.</li>
     </ul>
 
-    <p><b>Website visits:</b> when you visit our store, even without placing an order, we record your IP address (as seen by our server and by your browser), internet provider, approximate location based on IP, device information (as listed above), the page visited, the referring website, and the date, time and number of your visits. This helps us detect fraud and abuse and understand how the store is used.</p>
-
-    <h2>3. Precise location (GPS)</h2>
-    <p>We never ask you for your location. However, if you have previously allowed this website to access your location in your browser or phone settings, we record your <b>GPS coordinates</b> and their accuracy with your order, to help prevent fraud. You can turn this off at any time by removing location permission for this website in your browser or phone settings.</p>
-
-    <h2>4. Identity verification</h2>
-    <p>If an order looks suspicious, we may ask you to verify your identity before we deliver it. In that case we ask for a <b>photo of your ID card</b> and a <b>selfie of you holding it</b>. Our staff compare these manually with your order and payment details. They are used only to verify that order and prevent fraud. They are stored privately, seen only by authorised staff, and <b>deleted after we have reviewed them</b>, within 30 days at most. You may choose not to verify; in that case we will cancel the order and refund any payment we received.</p>
-
-    <p>Your browser also stores a list of your recent orders on your own device so you can find them under "My orders". We do not use advertising or tracking cookies.</p>
-
-    <h2>5. Why we use your information</h2>
+    <h2>12. Service providers and international transfers</h2>
+    <p>We use the following categories of service providers, which may process personal information on our behalf and may store it in countries other than the Maldives:</p>
     <ul>
-      <li>To verify payments and deliver your gift card PIN.</li>
-      <li>To prevent fraud, such as fake or reused payment slips, stolen accounts or repeated abuse.</li>
-      <li>To contact you about your order.</li>
-      <li>To keep records of sales and comply with legal obligations.</li>
+      <li><b>Website hosting and serverless functions:</b> Vercel Inc., which also provides the approximate IP-based location of requests.</li>
+      <li><b>Database and file storage:</b> Supabase Inc., which stores Orders, Payment Slips, verification materials and visit records.</li>
+      <li><b>Artificial intelligence document reading (Instant delivery only):</b> Anthropic PBC, which processes the Payment Slip and identity document images you upload for Instant delivery in order to extract the details described in Section 6.1.</li>
+      <li><b>IP lookup:</b> ipapi.co and, as a fallback, ipify.org, which your browser contacts directly to determine your public IP address and network operator.</li>
+      <li><b>Fonts:</b> Google Fonts, which your browser contacts to load typefaces and which may receive your IP address.</li>
     </ul>
-    <p>We do not sell your information or use it for marketing.</p>
+    <p>Where personal information is transferred outside the Maldives, we take reasonable steps to ensure it is protected in a manner consistent with this Policy.</p>
 
-    <h2>6. Who can see it</h2>
-    <p>Only our authorised staff can view your order details, payment slip, ID photos (if requested), device and location information. Your data is stored with service providers who host this website and its database (Vercel and Supabase). Your browser's IP address and internet provider are looked up using an IP lookup service (ipapi.co, or ipify.org as a backup). These providers process data only to provide their service. We may share information with banks, payment providers or authorities when required by law or to investigate fraud.</p>
+    <h2>13. Data retention</h2>
+    <table>
+      <tr><th>Information</th><th>Retention period</th></tr>
+      <tr><td>Order records (including name, contact details, device, network and location information)</td><td>Up to 12 months after the Order, or longer where required for accounting, legal or dispute purposes</td></tr>
+      <tr><td>Payment Slips</td><td>Up to 12 months after the Order</td></tr>
+      <tr><td>Identity verification materials</td><td>Deleted after the verification decision, no later than 30 days after the decision</td></tr>
+      <tr><td>Visit records of Visitors who did not place an Order</td><td>Up to 12 months after the last visit</td></tr>
+      <tr><td>Communications with us</td><td>Up to 12 months after the matter is closed</td></tr>
+    </table>
+    <p>We may retain information for longer where necessary to comply with law, resolve disputes, enforce our agreements, or where an investigation of suspected fraud is ongoing. When information is no longer required, we delete it or render it anonymous.</p>
 
-    <h2>7. Your order link</h2>
-    <p>After you place an order you receive a private link to your order page. Anyone with this link can see your order status and, once approved, your PIN. Keep the link private.</p>
+    <h2>14. Data security</h2>
+    <p>We implement reasonable technical and organisational measures designed to protect personal information against unauthorised access, loss, alteration and disclosure. These include restricting database access to our server environment, storing Payment Slips and verification materials in private storage accessible only through short-lived authorised links, password-protecting administrative functions, and transmitting data over encrypted connections. No method of transmission or storage is completely secure, and we cannot guarantee absolute security.</p>
 
-    <h2>8. How long we keep it</h2>
-    <p>We keep order records, payment slips, device and location information for up to <b>12 months</b> after your order for fraud prevention, disputes and accounting, unless a longer period is required by law. After that, we delete them.</p>
+    <h2>15. Your order link</h2>
+    <p>After placing an Order you receive a unique, randomly generated link to your order page. Anyone who has this link can view the status of the Order and, once approved, the PIN. You are responsible for keeping your order link confidential. We are not responsible for any loss resulting from the disclosure of your order link by you or by any person who obtained it from you.</p>
 
-    <h2>9. Security</h2>
-    <p>Our database is not publicly accessible, payment slips are stored privately, and our admin area is password-protected. No system is perfectly secure, but we take reasonable steps to protect your information.</p>
+    <h2>16. Your rights and choices</h2>
+    <p>Subject to applicable law, you may request to: (a) access the personal information we hold about you; (b) correct inaccurate information; (c) delete your information; (d) restrict or object to certain processing; and (e) withdraw consent where processing is based on consent. To make a request, contact us using the details in Section 20 and include your order ID where available. We may need to verify your identity before responding. We may decline or limit a request where retention is required by law, for fraud prevention, or to establish, exercise or defend legal claims.</p>
+    <p>You may also: disable location permission for this website in your browser settings; clear local storage to remove your browser identifier and order list; and choose not to complete identity verification.</p>
 
-    <h2>10. Your choices</h2>
-    <p>You can ask us what information we hold about you, or ask us to correct or delete it, by contacting us below. We may need to keep some records where required for fraud prevention or legal reasons.</p>
+    <h2>17. Children</h2>
+    <p>The Service is not directed at children. You must be at least 18 years old, or the age of majority where you live, to place an Order. We do not knowingly collect personal information from children. If you believe a child has provided us with personal information, please contact us and we will take steps to delete it.</p>
 
-    <h2>11. Changes</h2>
-    <p>We may update this policy from time to time. The latest version will always be on this page.</p>
+    <h2>18. Third-party websites and brands</h2>
+    <p>Gift cards sold through the Service are issued by third parties. Redemption of a Code is subject to the issuer's own terms and privacy policy. The Service may contain links to third-party websites; we are not responsible for their content or privacy practices.</p>
 
-    <h2>12. Contact</h2>
+    <h2>19. Changes to this Policy</h2>
+    <p>We may amend this Policy from time to time. The amended Policy will be posted on this page with a revised "Last updated" date and will apply from that date. Your continued use of the Service after the effective date of an amended Policy constitutes acknowledgement of the amended Policy.</p>
+
+    <h2>20. Contact us</h2>
+    <p>If you have any questions about this Policy or wish to exercise your rights, please contact:</p>
     <p>Digital Maldives<br />Email: you@example.com<br />Phone / Viber: +960 000 0000</p>
   </main>
 

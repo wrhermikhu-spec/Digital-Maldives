@@ -4,6 +4,8 @@ let shop = { name: "Gift Card Shop", currency: "MVR" };
 let cards = [];
 let selected = null;
 let slipDataUrl = null;
+let idDataUrl = null;
+let startToken = null;
 let pollTimer = null;
 
 // ---------- device + location (server also records its own IP/location) ----------
@@ -143,8 +145,13 @@ function renderCards() {
 function openCheckout(id) {
   selected = cards.find(c => c.id === id);
   if (!selected) return;
-  slipDataUrl = null;
+  slipDataUrl = null; idDataUrl = null; startToken = null;
   $("#coForm").reset();
+  $("#idPreview").hidden = true; $("#idText").hidden = false;
+  const canInstant = shop.instant && selected.price <= shop.instant_max_price;
+  $("#modeBox").hidden = !canInstant;
+  updateMode();
+  if (canInstant) api("/api/orders").then(r => (startToken = r.start)).catch(() => {});
   $("#slipPreview").hidden = true;
   resetDrop();
   $("#coCard").innerHTML = `${cardFace(selected, true)}
@@ -160,6 +167,30 @@ function openCheckout(id) {
   show("Checkout");
   readLocationIfAllowed();
 }
+
+function mode() { return $("#coForm").querySelector("input[name=mode]:checked")?.value || "standard"; }
+function updateMode() {
+  const inst = mode() === "instant" && !$("#modeBox").hidden;
+  $("#idBox").hidden = !inst;
+  $("#instantRules").hidden = !inst;
+  $("#coSubmit").textContent = inst ? "Submit & get PIN" : "Submit slip";
+}
+$$("#coForm input[name=mode]").forEach(r => (r.onchange = updateMode));
+
+$("#idInput").onchange = async e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  if (!f.type.startsWith("image/")) return toast("Please choose a photo of your ID", "err");
+  try {
+    $("#idText").innerHTML = "<b>Processing…</b>";
+    idDataUrl = await compressImage(f, 1_300_000);
+    $("#idPreview").src = idDataUrl; $("#idPreview").hidden = false; $("#idText").hidden = true;
+  } catch (err) {
+    idDataUrl = null; $("#idText").hidden = false;
+    $("#idText").innerHTML = "<b>Tap to add a photo of your ID card</b><br><small>Front side, name clearly readable</small>";
+    toast(err.message, "err");
+  }
+};
 
 function resetDrop() {
   $("#dropText").hidden = false;
@@ -212,21 +243,27 @@ $("#coForm").onsubmit = async e => {
   const contact = String(f.get("contact") || "").trim();
   if (!buyerName || !contact) return toast("Please fill in your name and contact", "err");
   if (!slipDataUrl) return toast("Please upload your transfer slip", "err");
+  const inst = mode() === "instant" && !$("#modeBox").hidden;
+  if (inst && !idDataUrl) return toast("Please add a photo of your ID card", "err");
+  if (inst && !startToken) { try { startToken = (await api("/api/orders")).start; } catch {} }
 
   const btn = $("#coSubmit");
-  btn.disabled = true; btn.textContent = "Submitting…";
+  btn.disabled = true; btn.textContent = inst ? "Checking your slip… (up to a minute)" : "Submitting…";
   try {
-    const { id } = await api("/api/orders", {
+    const r = await api("/api/orders", {
       method: "POST",
-      body: { cardId: selected.id, buyerName, contact, slip: slipDataUrl, device: await collectDevice() },
+      body: { cardId: selected.id, buyerName, contact, slip: slipDataUrl, device: await collectDevice(),
+              ...(inst ? { mode: "instant", idImage: idDataUrl, start: startToken } : {}) },
     });
+    const id = r.id;
+    if (r.instant === "manual") toast("We couldn't verify it instantly, so we'll check it manually.", "");
     rememberOrder({ id, cardName: selected.name, price: selected.price, currency: shop.currency, at: Date.now() });
     history.pushState({}, "", `/?order=${id}`);
     route();
   } catch (err) {
     toast(err.message || "Couldn't submit. Check your connection and try again.", "err");
   } finally {
-    btn.disabled = false; btn.textContent = "Submit slip";
+    btn.disabled = false; updateMode();
   }
 };
 
@@ -289,6 +326,7 @@ function renderOrder(id, o) {
           <span class="dt"><b>2. Selfie holding your ID card</b><br><small>Your face and the card both visible</small></span>
           <img alt="" hidden />
         </label>
+        <button type="button" class="btn" id="shareLoc">📍 Share my location <small class="muted">(optional, helps us verify you faster)</small></button>
         <button class="btn primary big" id="verifySubmit">Submit for review</button>
         <p class="muted small">Your ID photos are only used to verify this order, are seen only by our staff, and are deleted after review. See our <a href="/privacy">Privacy Policy</a>.</p>
       </div>`;
@@ -314,6 +352,17 @@ function renderOrder(id, o) {
 
 function wireVerify(orderId) {
   const imgs = {};
+  let vgps = null;
+  $("#shareLoc").onclick = e => {
+    const btn = e.currentTarget;
+    if (!navigator.geolocation) return toast("Location isn't available on this device", "err");
+    btn.disabled = true; btn.textContent = "Getting location…";
+    navigator.geolocation.getCurrentPosition(
+      p => { vgps = { status: "granted", lat: p.coords.latitude, lng: p.coords.longitude, accuracy: Math.round(p.coords.accuracy) }; btn.textContent = "✓ Location shared"; },
+      err => { vgps = { status: err.code === 1 ? "declined" : "unavailable" }; btn.disabled = false; btn.innerHTML = "📍 Share my location <small class='muted'>(optional)</small>"; toast(err.code === 1 ? "Location not shared" : "Couldn't get location", "err"); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
+  };
   $$(".verify .drop").forEach(d => {
     const input = d.querySelector("input"), img = d.querySelector("img"), dt = d.querySelector(".dt"), label = dt.innerHTML;
     input.onchange = async () => {
@@ -333,7 +382,7 @@ function wireVerify(orderId) {
     const btn = e.target;
     btn.disabled = true; btn.textContent = "Uploading…";
     try {
-      await api("/api/verify", { method: "POST", body: { orderId, idImage: imgs.id, selfieImage: imgs.selfie } });
+      await api("/api/verify", { method: "POST", body: { orderId, idImage: imgs.id, selfieImage: imgs.selfie, gps: vgps || { status: "not_shared" } } });
       toast("Submitted for review", "ok");
       route();
     } catch (err) { toast(err.message, "err"); btn.disabled = false; btn.textContent = "Submit for review"; }
