@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       settings: {
         name: st.name, currency: st.currency, bank_name: st.bank_name, account_name: st.account_name,
         account_number: st.account_number, instructions: st.instructions,
-        instant: !!(st.instant_enabled && process.env.ANTHROPIC_API_KEY),
+        instant: !!(st.instant_enabled && process.env.OCR_SPACE_API_KEY),
         instant_max_price: Number(st.instant_max_price ?? 0),
       },
       cards: cards.map(({ stock, ...c }) => ({ ...c, price: Number(c.price), in_stock: stock > 0 })),

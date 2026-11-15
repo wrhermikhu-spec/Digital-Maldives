@@ -34,7 +34,7 @@ const actions = {
     return {
       orders: orders.map(o => ({ ...o, price: Number(o.price) })),
       cards: cards.map(c => ({ ...c, price: Number(c.price) })),
-      settings: { ...(settings[0] || {}), ai_key_set: !!process.env.ANTHROPIC_API_KEY },
+      settings: { ...(settings[0] || {}), ai_key_set: !!process.env.OCR_SPACE_API_KEY },
       visits,
     };
   },

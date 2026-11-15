@@ -62,7 +62,7 @@ export default async function handler(req, res) {
     // ---- instant eligibility ----
     let startedAt = null;
     if (instant) {
-      if (!settings.instant_enabled || !process.env.ANTHROPIC_API_KEY) throw bad("Instant delivery isn't available right now. Please use standard checkout.");
+      if (!settings.instant_enabled || !process.env.OCR_SPACE_API_KEY) throw bad("Instant delivery isn't available right now. Please use standard checkout.");
       if (Number(card.price) > Number(settings.instant_max_price ?? 0)) throw bad("This card is too expensive for instant delivery. Please use standard checkout.");
       startedAt = verifyStart(body.start);
       if (!startedAt) throw bad("Your checkout session expired. Please refresh and try again.");
@@ -107,13 +107,15 @@ export default async function handler(req, res) {
     // ---- instant: read documents + run checks ----
     let result;
     try {
+      // Free OCR accepts images up to 1 MB
+      if (slip.bytes.length > 1_000_000 || idImg.bytes.length > 1_000_000) throw new Error("Image larger than 1 MB, so it can't be read automatically");
       const data = await readDocuments(slip.b64, idImg.b64);
       const ref = str(data?.slip?.reference, 80);
       let refUsed = false;
       if (ref) refUsed = (await db.select("orders", `slip_ref=eq.${enc(ref)}&id=neq.${id}&select=id`)).length > 0;
       result = evaluate({ data, order: { price: Number(card.price), currency: settings.currency || "MVR" }, settings, startedAt, refUsed });
       await db.update("orders", `id=eq.${id}`, {
-        slip_ref: ref || null, slip_time: str(data?.slip?.datetime, 20) || null,
+        slip_ref: ref || null, slip_time: str((data?.slip?.datetimes || [])[0], 20) || null,
         slip_sender: str(data?.slip?.sender_name, 120) || null, id_name: str(data?.id?.full_name, 120) || null,
         auto_check: result,
       });
