@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gift Card Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap row">
+      <a class="brand" href="./"><span class="logo">◆</span><span id="shopName">Gift Card Shop</span></a>
+      <button class="link" id="myOrdersBtn">My orders</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Store -->
+    <section id="viewShop">
+      <div class="hero">
+        <h1>Gift cards, delivered to this page.</h1>
+        <p>Pick a card, pay by bank transfer and upload your slip. Your PIN shows up here as soon as we verify the payment.</p>
+        <ol class="steps">
+          <li><b>1</b> Choose a card</li>
+          <li><b>2</b> Transfer &amp; upload slip</li>
+          <li><b>3</b> Get your PIN</li>
+        </ol>
+      </div>
+      <div id="cards" class="grid"><div class="muted pad">Loading cards…</div></div>
+    </section>
+
+    <!-- Checkout -->
+    <section id="viewCheckout" hidden>
+      <button class="back" data-go="shop">← All cards</button>
+      <div class="checkout">
+        <div id="coCard"></div>
+        <form id="coForm" class="panel" novalidate>
+          <h2>1. Transfer the amount</h2>
+          <div id="bankBox" class="bank"></div>
+
+          <h2>2. Your details</h2>
+          <label>Full name<input name="buyerName" required maxlength="80" autocomplete="name" /></label>
+          <label>Phone or email<input name="contact" required maxlength="120" autocomplete="tel" placeholder="So we can reach you if there's a problem" /></label>
+
+          <h2>3. Upload your transfer slip</h2>
+          <label class="drop" id="drop">
+            <input type="file" id="slipInput" accept="image/*" hidden />
+            <span id="dropText"><b>Tap to choose a screenshot</b><br /><small>JPG or PNG of the bank app receipt</small></span>
+            <img id="slipPreview" alt="" hidden />
+          </label>
+
+          <p class="notice">For fraud prevention we record your IP address and basic device info (phone model, browser, screen) with your order.</p>
+          <button class="btn primary big" id="coSubmit" type="submit">Submit slip</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Order status -->
+    <section id="viewOrder" hidden></section>
+
+    <!-- My orders -->
+    <section id="viewMyOrders" hidden>
+      <button class="back" data-go="shop">← All cards</button>
+      <h2>My orders</h2>
+      <p class="muted">Orders placed from this browser. Bookmark an order page to open it on another device.</p>
+      <div id="myOrdersList"></div>
+    </section>
+  </main>
+
+  <footer class="wrap foot muted"><span id="footName"></span> · Payments verified manually, usually within minutes during business hours.</footer>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="/store.js"></script>
+</body>
+</html>

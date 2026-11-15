@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Admin · Gift Card Shop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="admin">
+  <header class="top">
+    <div class="wrap row">
+      <a class="brand" href="/admin"><span class="logo">◆</span><span>Admin</span></a>
+      <span class="row gap"><a class="link" href="/" target="_blank">View store ↗</a><button class="link" id="refreshBtn" hidden>↻</button><button class="link" id="logoutBtn" hidden>Log out</button></span>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="login" hidden>
+      <form id="loginForm" class="panel narrow">
+        <h2>Admin login</h2>
+        <input type="text" name="username" value="admin" autocomplete="username" hidden />
+        <label>Password<input name="password" type="password" required autocomplete="current-password" /></label>
+        <button class="btn primary big">Log in</button>
+        <p class="err small" id="loginErr"></p>
+      </form>
+    </section>
+
+    <section id="app" hidden>
+      <nav class="tabs">
+        <button data-tab="orders" class="on">Orders <span class="badge" id="pendingBadge"></span></button>
+        <button data-tab="customers">Customers</button>
+        <button data-tab="stock">Stock</button>
+        <button data-tab="cards">Cards</button>
+        <button data-tab="settings">Settings</button>
+      </nav>
+
+      <div data-pane="orders">
+        <div class="filters">
+          <button data-f="pending" class="on">Pending</button>
+          <button data-f="approved">Approved</button>
+          <button data-f="rejected">Rejected</button>
+          <button data-f="all">All</button>
+          <input id="orderSearch" placeholder="Search name, contact, IP, model…" />
+        </div>
+        <div id="ordersList"></div>
+      </div>
+
+      <div data-pane="customers" hidden>
+        <p class="muted small">Grouped by browser. ⚠ flags: an IP shared with another customer, or a past rejected slip.</p>
+        <input id="custSearch" class="search" placeholder="Search name, contact, IP, model…" />
+        <div id="custList"></div>
+      </div>
+
+      <div data-pane="stock" hidden><div id="stockList"></div></div>
+
+      <div data-pane="cards" hidden>
+        <div id="cardsList"></div>
+        <button class="btn primary" id="newCardBtn">+ Add card</button>
+      </div>
+
+      <div data-pane="settings" hidden>
+        <form id="settingsForm" class="panel narrow">
+          <h2>Shop settings</h2>
+          <label>Shop name<input name="name" required /></label>
+          <label>Currency<input name="currency" required placeholder="MVR" /></label>
+          <label>Bank<input name="bank_name" placeholder="Bank of Maldives" /></label>
+          <label>Account name<input name="account_name" /></label>
+          <label>Account number<input name="account_number" /></label>
+          <label>Payment instructions<textarea name="instructions" rows="3" placeholder="Use your name as the transfer remark."></textarea></label>
+          <button class="btn primary">Save settings</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="modal"><div id="modalBody"></div></dialog>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="/admin.js"></script>
+</body>
+</html>
