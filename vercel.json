@@ -3,20 +3,36 @@
   "outputDirectory": "public",
   "cleanUrls": true,
   "functions": {
-    "api/*.js": { "maxDuration": 15 }
+    "api/*.js": {
+      "maxDuration": 60
+    }
   },
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "same-origin" },
-        { "key": "Accept-CH", "value": "Sec-CH-UA-Model, Sec-CH-UA-Platform-Version" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Accept-CH",
+          "value": "Sec-CH-UA-Model, Sec-CH-UA-Platform-Version"
+        }
       ]
     },
     {
       "source": "/admin",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ]
 }
