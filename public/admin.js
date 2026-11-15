@@ -167,7 +167,7 @@ function renderOrders() {
 }
 
 const CHECK_LABEL = { slip_readable: "Slip is a successful transfer", id_readable: "ID readable", id_not_expired: "ID not expired", name_match: "Slip name matches ID",
-  amount_match: "Amount matches", paid_to_us: "Paid to our account", within_30_min: "Transferred within 30 min", reference_new: "Reference not used before", no_editing_signs: "No signs of editing" };
+  amount_match: "Amount matches", paid_to_us: "Paid to our account", within_30_min: "Transferred within 30 min", reference_new: "Reference not used before", no_editing_signs: "No signs of editing" }; // (editing check not available with free OCR)
 function autoCheckBox(o) {
   const a = o.auto_check;
   const head = a.error ? `⚠ ${esc(a.error)}` : a.passed ? "✓ All automatic checks passed" : "✗ Automatic checks failed: review manually";
@@ -392,7 +392,7 @@ function cardDialog(c) {
 const SETTINGS = ["name", "currency", "bank_name", "account_name", "account_number", "instructions", "instant_max_price", "instant_daily_limit"];
 function fillSettings() {
   const f = $("#settingsForm");
-  $("#aiKeyNote").innerHTML = shop.ai_key_set ? "✓ AI key is set in Vercel." : "⚠ Add <code>ANTHROPIC_API_KEY</code> in Vercel → Environment Variables to use instant delivery.";
+  $("#aiKeyNote").innerHTML = shop.ai_key_set ? "✓ OCR key is set in Vercel." : "⚠ Add <code>OCR_SPACE_API_KEY</code> in Vercel → Environment Variables to use instant delivery (free key from ocr.space).";
   if (f.contains(document.activeElement)) return;
   for (const k of SETTINGS) f[k].value = shop[k] ?? "";
   f.instant_enabled.checked = !!shop.instant_enabled;

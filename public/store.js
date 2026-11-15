@@ -183,7 +183,7 @@ $("#idInput").onchange = async e => {
   if (!f.type.startsWith("image/")) return toast("Please choose a photo of your ID", "err");
   try {
     $("#idText").innerHTML = "<b>Processing…</b>";
-    idDataUrl = await compressImage(f, 1_300_000);
+    idDataUrl = await compressImage(f, 1_000_000);
     $("#idPreview").src = idDataUrl; $("#idPreview").hidden = false; $("#idText").hidden = true;
   } catch (err) {
     idDataUrl = null; $("#idText").hidden = false;
@@ -203,7 +203,7 @@ $("#slipInput").onchange = async e => {
   if (!f.type.startsWith("image/")) { toast("Please choose an image (screenshot of the slip)", "err"); return; }
   try {
     $("#dropText").innerHTML = "<b>Processing…</b>";
-    slipDataUrl = await compressImage(f);
+    slipDataUrl = await compressImage(f, 1_000_000); // free OCR limit is 1 MB
     $("#slipPreview").src = slipDataUrl;
     $("#slipPreview").hidden = false;
     $("#dropText").hidden = true;
