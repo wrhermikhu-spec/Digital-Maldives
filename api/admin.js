@@ -34,7 +34,7 @@ const actions = {
     return {
       orders: orders.map(o => ({ ...o, price: Number(o.price) })),
       cards: cards.map(c => ({ ...c, price: Number(c.price) })),
-      settings: settings[0] || {},
+      settings: { ...(settings[0] || {}), ai_key_set: !!process.env.ANTHROPIC_API_KEY },
       visits,
     };
   },
@@ -84,7 +84,7 @@ const actions = {
     if (!o?.id_path) throw bad("No ID photos for this order.", 404);
     const [idUrl, selfieUrl] = await Promise.all([
       storage.signedUrl("kyc", o.id_path, 600),
-      storage.signedUrl("kyc", o.selfie_path, 600),
+      o.selfie_path ? storage.signedUrl("kyc", o.selfie_path, 600) : null,
     ]);
     return { idUrl, selfieUrl };
   },
@@ -137,6 +137,9 @@ const actions = {
       account_name: str(s?.account_name, 120),
       account_number: str(s?.account_number, 60),
       instructions: str(s?.instructions, 400),
+      instant_enabled: !!s?.instant_enabled,
+      instant_max_price: Math.max(0, Number(s?.instant_max_price) || 0),
+      instant_daily_limit: Math.max(0, Math.trunc(Number(s?.instant_daily_limit) || 0)),
     };
     await db.update("settings", "id=eq.1", row);
     return { ok: true };
