@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   try {
     const id = new URL(req.url, "http://x").searchParams.get("id");
     if (!isUuid(id)) throw bad("Order not found", 404);
-    const rows = await db.select("orders", `id=eq.${id}&select=id,card_name,price,currency,status,pin,note,created_at`);
+    const rows = await db.select("orders", `id=eq.${id}&select=id,card_name,price,currency,status,pin,note,verify_note,created_at`);
     if (!rows.length) throw bad("Order not found", 404);
     const o = rows[0];
     if (o.status !== "approved") delete o.pin;

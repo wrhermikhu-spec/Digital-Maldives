@@ -3,6 +3,9 @@ import { db, storage, enc } from "../lib/supabase.js";
 import { send, fail, bad, readJson, str, isUuid, clientInfo } from "../lib/http.js";
 import { parseUA } from "../lib/ua.js";
 
+const num = (v, min, max) => { if (v === null || v === undefined || v === "") return null; const n = Number(v); return Number.isFinite(n) && n >= min && n <= max ? n : null; };
+const GPS_STATES = ["granted", "not_granted", "unavailable", "timeout"];
+
 const MAX_SLIP_BYTES = 2.5 * 1024 * 1024;
 const MAX_ORDERS_PER_IP = 5; // per 15 minutes
 
@@ -43,6 +46,8 @@ export default async function handler(req, res) {
 
     const ua = parseUA(net.user_agent);
     const d = body.device && typeof body.device === "object" ? body.device : {};
+    const gps = d.gps && typeof d.gps === "object" ? d.gps : {};
+    const gpsOk = gps.status === "granted";
     await db.insert("orders", {
       id,
       card_id: card.id,
@@ -65,6 +70,19 @@ export default async function handler(req, res) {
       language: str(d.language, 20),
       timezone: str(d.timezone, 60),
       visitor_id: str(d.visitorId, 64),
+      ip_lat: num(net.lat, -90, 90),
+      ip_lng: num(net.lng, -180, 180),
+      // Browser-side IP lookup (can differ from server IP behind VPN/proxy)
+      browser_ip: str(d.browserIp, 64),
+      browser_city: str(d.browserCity, 80),
+      browser_region: str(d.browserRegion, 80),
+      browser_country: str(d.browserCountry, 80),
+      isp: str(d.isp, 120),
+      // GPS from the phone (only if the buyer allowed location)
+      gps_status: GPS_STATES.includes(gps.status) ? gps.status : "not_granted",
+      gps_lat: gpsOk ? num(gps.lat, -90, 90) : null,
+      gps_lng: gpsOk ? num(gps.lng, -180, 180) : null,
+      gps_accuracy: gpsOk ? num(gps.accuracy, 0, 1e7) : null,
     });
 
     send(res, 201, { id });

@@ -21,19 +21,21 @@ export default async function handler(req, res) {
   } catch (e) { fail(res, e); }
 }
 
-const ORDER_FIELDS = "id,card_id,card_name,price,currency,buyer_name,contact,status,pin,note,ip,city,region,country,visitor_id,device_model,os,browser,screen,language,timezone,user_agent,created_at,reviewed_at";
+const ORDER_FIELDS = "*";
 
 const actions = {
   async dashboard() {
-    const [orders, cards, settings] = await Promise.all([
+    const [orders, cards, settings, visits] = await Promise.all([
       db.select("orders", `select=${ORDER_FIELDS}&order=created_at.desc&limit=1000`),
       db.select("card_stock", "select=*&order=sort.asc,price.asc"),
       db.select("settings", "id=eq.1&select=*"),
+      db.select("visits", "select=*&order=last_seen.desc&limit=1000").catch(() => []),
     ]);
     return {
       orders: orders.map(o => ({ ...o, price: Number(o.price) })),
       cards: cards.map(c => ({ ...c, price: Number(c.price) })),
       settings: settings[0] || {},
+      visits,
     };
   },
 
@@ -58,10 +60,43 @@ const actions = {
 
   async reject({ id, note }) {
     if (!isUuid(id)) throw bad("Bad order id");
-    const rows = await db.update("orders", `id=eq.${id}&status=eq.pending`, {
+    const rows = await db.update("orders", `id=eq.${id}&status=in.(pending,verify_required,verify_submitted)`, {
       status: "rejected", note: str(note, 300) || "We couldn't verify this payment.", reviewed_at: new Date().toISOString(),
     });
     if (!rows.length) throw bad("This order was already reviewed.", 409);
+    return { ok: true };
+  },
+
+  async requestVerification({ id, note }) {
+    if (!isUuid(id)) throw bad("Bad order id");
+    const rows = await db.update("orders", `id=eq.${id}&status=eq.pending`, {
+      status: "verify_required",
+      verify_note: str(note, 300) || "We need to confirm your identity before we can deliver this order.",
+      verify_requested_at: new Date().toISOString(),
+    });
+    if (!rows.length) throw bad("Only pending orders can be sent for verification.", 409);
+    return { ok: true };
+  },
+
+  async kyc({ id }) {
+    if (!isUuid(id)) throw bad("Bad order id");
+    const [o] = await db.select("orders", `id=eq.${id}&select=id_path,selfie_path`);
+    if (!o?.id_path) throw bad("No ID photos for this order.", 404);
+    const [idUrl, selfieUrl] = await Promise.all([
+      storage.signedUrl("kyc", o.id_path, 600),
+      storage.signedUrl("kyc", o.selfie_path, 600),
+    ]);
+    return { idUrl, selfieUrl };
+  },
+
+  async deleteKyc({ id }) {
+    if (!isUuid(id)) throw bad("Bad order id");
+    const [o] = await db.select("orders", `id=eq.${id}&select=id_path,selfie_path,status`);
+    if (!o) throw bad("Order not found", 404);
+    if (o.status === "verify_submitted") throw bad("Approve or reject the order first.", 409);
+    const paths = [o.id_path, o.selfie_path].filter(Boolean);
+    if (paths.length) await storage.remove("kyc", paths);
+    await db.update("orders", `id=eq.${id}`, { id_path: null, selfie_path: null });
     return { ok: true };
   },
 
